@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>EduManage Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div id="authWrap" class="aw">
+  <div class="ac">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:1.25rem">
+      <div style="width:40px;height:40px;background:var(--navy);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px">🏫</div>
+      <div style="font-size:20px;font-weight:700;color:var(--navy)">Edu<span style="color:var(--accent)">Manage</span> <span style="font-size:12px;background:var(--acl);color:var(--acd);padding:2px 8px;border-radius:99px;font-weight:600">Pro</span></div>
+    </div>
+    <div id="authBody"><div style="text-align:center;padding:2rem 0;color:var(--txts);font-size:13px">Loading…</div></div>
+  </div>
+</div>
+
+<div id="appWrap" class="app hidden">
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-icon">🏫</div>
+      <div class="sb-name">Edu<span>Manage</span></div>
+    </div>
+    <div class="sb-school">
+      <div class="sb-sname" id="sbSchool">Sunrise Academy</div>
+      <div class="sb-stype" id="sbType">Secondary School</div>
+    </div>
+    <nav class="nav">
+      <div class="ns">Overview</div>
+      <div class="ni active" data-p="dashboard"><span class="ni-ic">📊</span>Dashboard</div>
+      <div class="ns">Academic</div>
+      <div class="ni" data-p="classes"><span class="ni-ic">🏛️</span>Classes</div>
+      <div class="ni" data-p="timetable"><span class="ni-ic">🗓️</span>Timetable</div>
+      <div class="ni" data-p="attendance"><span class="ni-ic">✅</span>Attendance</div>
+      <div class="ni" data-p="exams"><span class="ni-ic">📝</span>Exams & Results</div>
+      <div class="ni" data-p="homework"><span class="ni-ic">📚</span>Homework</div>
+      <div class="ns">Students</div>
+      <div class="ni" data-p="students"><span class="ni-ic">🎓</span>Students</div>
+      <div class="ni" data-p="fees"><span class="ni-ic">💳</span>Fee Management</div>
+      <div class="ns">Staff</div>
+      <div class="ni" data-p="teachers"><span class="ni-ic">👩‍🏫</span>Teachers</div>
+      <div class="ni" data-p="salary"><span class="ni-ic">💰</span>Salary</div>
+      <div class="ns">Admin</div>
+      <div class="ni" data-p="notices"><span class="ni-ic">📢</span>Notice Board<span class="ni-badge" id="noticeBadge">2</span></div>
+      <div class="ni" data-p="expenses"><span class="ni-ic">📊</span>Expenses</div>
+      <div class="ni" data-p="users"><span class="ni-ic">👥</span>User Roles</div>
+      <div class="ni" data-p="school"><span class="ni-ic">🏫</span>School Profile</div>
+      <div class="ni" data-p="reports"><span class="ni-ic">📋</span>Reports</div>
+    </nav>
+    <div class="sb-foot">
+      <div class="ua">
+        <div class="uav" id="sbInitials">SA</div>
+        <div><div class="un" id="sbName">Admin</div><div class="ur" id="sbRole">Administrator</div></div>
+      </div>
+      <button class="lbtn" onclick="logout()">← Sign out</button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-title" id="pgTitle">Dashboard</div>
+      <div class="tb-acts" id="pgActs"></div>
+    </div>
+    <div class="content" id="pgContent"></div>
+  </div>
+</div>
+
+<div id="modalWrap"></div>
+<div id="toastEl" class="toast hidden"></div>
+
+<div id="superWrap" class="app hidden">
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-icon">🛡️</div>
+      <div class="sb-name">Edu<span>Manage</span></div>
+    </div>
+    <div class="sb-school">
+      <div class="sb-sname">Platform Admin</div>
+      <div class="sb-stype">Super Administrator</div>
+    </div>
+    <nav class="nav">
+      <div class="ns">Overview</div>
+      <div class="ni active" data-sp="platform-dashboard"><span class="ni-ic">📊</span>Platform Overview</div>
+      <div class="ns">Management</div>
+      <div class="ni" data-sp="platform-schools"><span class="ni-ic">🏫</span>Schools</div>
+      <div class="ni" data-sp="platform-users"><span class="ni-ic">👥</span>Users</div>
+    </nav>
+    <div class="sb-foot">
+      <div class="ua">
+        <div class="uav">SA</div>
+        <div><div class="un">Super Admin</div><div class="ur">Platform</div></div>
+      </div>
+      <button class="lbtn" onclick="superLogout()">← Sign out</button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-title" id="spgTitle">Platform overview</div>
+      <div class="tb-acts" id="spgActs"></div>
+    </div>
+    <div class="content" id="spgContent"></div>
+  </div>
+</div>
+
+<div id="parentWrap" class="app hidden">
+  <aside class="sb">
+    <div class="sb-logo">
+      <div class="sb-icon">👨‍👩‍👧</div>
+      <div class="sb-name">Edu<span>Manage</span></div>
+    </div>
+    <div class="sb-school">
+      <div class="sb-sname" id="paChild">Parent portal</div>
+      <div class="sb-stype">Parent access</div>
+    </div>
+    <nav class="nav">
+      <div class="ns">Overview</div>
+      <div class="ni active" data-pp="p-overview"><span class="ni-ic">🎓</span>Student profile</div>
+      <div class="ni" data-pp="p-attendance"><span class="ni-ic">✅</span>Attendance</div>
+      <div class="ns">Academic</div>
+      <div class="ni" data-pp="p-exams"><span class="ni-ic">📝</span>Exams & results</div>
+      <div class="ni" data-pp="p-homework"><span class="ni-ic">📚</span>Homework</div>
+      <div class="ni" data-pp="p-timetable"><span class="ni-ic">🗓️</span>Timetable</div>
+      <div class="ns">Finance</div>
+      <div class="ni" data-pp="p-fees"><span class="ni-ic">💳</span>Fees & receipts</div>
+      <div class="ns">Updates</div>
+      <div class="ni" data-pp="p-announce"><span class="ni-ic">📢</span>Announcements</div>
+      <div class="ni" data-pp="p-notify"><span class="ni-ic">🔔</span>Notifications</div>
+    </nav>
+    <div class="sb-foot">
+      <div class="ua">
+        <div class="uav" id="paInitials">P</div>
+        <div><div class="un" id="paName">Parent</div><div class="ur">Parent</div></div>
+      </div>
+      <button class="lbtn" onclick="parentLogout()">← Sign out</button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="tb-title" id="ppgTitle">Student overview</div>
+    </div>
+    <div class="content" id="ppgContent"></div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
